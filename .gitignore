@@ -1,1 +1,14 @@
+# vim
+.swp
+*~
+
+# Eclipse
+.settings
+.classpath
+.project
+
+# Maven
 target/
+
+# Xtend
+xtend-gen/
