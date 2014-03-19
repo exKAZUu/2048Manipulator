@@ -7,7 +7,7 @@
 
 # How to Use
 ## Java
-Please see (ManipulatorTest.java)[src/test/java/net/exkazuu/_2048manipulator/ManipulatorTest.java].
+Please see [ManipulatorTest.java](src/test/java/net/exkazuu/_2048manipulator/ManipulatorTest.java).
 
 # How to compile
 1. ```mvn package```
