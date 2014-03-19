@@ -26,7 +26,11 @@ class WebDriveQuitThread extends Thread {
 	}
 
 	override run() {
-		driver.quit
+		try {
+			driver.quit
+		} catch (Exception e) {
+			System.out.println("Failed to quit driver.");
+		}
 	}
 }
 
@@ -118,12 +122,15 @@ class Manipulator {
 		val time = System.currentTimeMillis
 		while (System.currentTimeMillis - time < maxSleepTime) {
 			Thread.sleep(10);
-			val tiles = currentTiles
-			val tilesString = tiles.map[it.join(" ")]
-			if (lastTilesString.join != tilesString.join) {
-				lastTiles = tiles
-				lastTilesString = ImmutableList.copyOf(tilesString)
-				return true
+			try {
+				val tiles = currentTiles
+				val tilesString = tiles.map[it.join(" ")]
+				if (lastTilesString.join != tilesString.join) {
+					lastTiles = tiles
+					lastTilesString = ImmutableList.copyOf(tilesString)
+					return true
+				}
+			} catch (NumberFormatException e) {
 			}
 		}
 		false
