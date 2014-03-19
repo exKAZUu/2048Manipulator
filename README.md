@@ -1,4 +1,4 @@
-2048Manipulator
+2048Manipulator  [![Build Status](https://secure.travis-ci.org/exKAZUu/2048Manipulator.png?branch=master)](http://travis-ci.org/exKAZUu/2048Manipulator)
 ===============
 
 # What Is This
