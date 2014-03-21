@@ -1,4 +1,4 @@
-package net.exkazuu._2048manipulator
+package net.exkazuu.manipulator2048
 
 import com.google.common.collect.ImmutableList
 import java.io.BufferedReader
@@ -156,8 +156,8 @@ class Manipulator {
 	static def main(String[] args) {
 		val man = new Manipulator()
 		val reader = new BufferedReader(new InputStreamReader(System.in))
-		while (!man.gameOver) {
-			System.out.println("Score: " + man.score + ", Best: " + man.bestScore)
+		while (!man.isGameOver) {
+			System.out.println("Score: " + man.getScore + ", Best: " + man.getBestScore)
 			System.out.println(man.stringifyTiles)
 			val cmds = Direction.values.filter([man.canMove(it)]).map[it.toString.toLowerCase]
 			System.out.println("Please enter a command [" + (cmds + #["restart"]).join(", ") + "]:")
@@ -178,7 +178,6 @@ class Manipulator {
 				}
 			}
 		}
-
 		System.out.println("Game Over!")
 	}
 }
