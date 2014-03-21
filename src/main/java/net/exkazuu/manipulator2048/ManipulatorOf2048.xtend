@@ -25,7 +25,7 @@ class WebDriveQuitThread extends Thread {
 	}
 }
 
-class Manipulator {
+class ManipulatorOf2048 {
 	val WebDriver driver
 	val JavascriptExecutor jsExecutor
 	var int waitTimeForUpdate
@@ -154,7 +154,7 @@ class Manipulator {
 	}
 
 	static def main(String[] args) {
-		val man = new Manipulator()
+		val man = new ManipulatorOf2048()
 		val reader = new BufferedReader(new InputStreamReader(System.in))
 		while (!man.isGameOver) {
 			System.out.println("Score: " + man.getScore + ", Best: " + man.getBestScore)

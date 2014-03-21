@@ -7,7 +7,16 @@
 
 # How to Use
 ## Java
-Please see [ManipulatorTest.java](src/test/java/net/exkazuu/_2048manipulator/ManipulatorTest.java).
+Please see [ManipulatorOf2048Test.java](src/test/java/net/exkazuu/manipulator2048/ManipulatorOf2048Test.java).
+
+```
+ManipulatorOf2048 man = new ManipulatorOf2048();
+man.move(Direction.UP);
+int score = man.getScore();
+String board = man.stringifyTiles();
+System.out.println("Score: " + score);
+System.out.println("board");
+```
 
 # How to compile
 1. ```mvn package```

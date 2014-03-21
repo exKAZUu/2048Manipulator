@@ -7,10 +7,10 @@ import java.util.List;
 
 import org.junit.Test;
 
-public class ManipulatorTest {
+public class ManipulatorOf2048Test {
   @Test
   public void test() {
-    Manipulator man = new Manipulator();
+    ManipulatorOf2048 man = new ManipulatorOf2048();
     assertThat(man.getScore(), is(0));
 
     int zero = 0, two = 0;
