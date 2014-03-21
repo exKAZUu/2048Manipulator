@@ -154,14 +154,20 @@ class ManipulatorOf2048 {
 	}
 
 	static def main(String[] args) {
+		val aimode = args.exists[it.trim == "-ai"]
 		val man = new ManipulatorOf2048()
 		val reader = new BufferedReader(new InputStreamReader(System.in))
 		while (!man.isGameOver) {
-			System.out.println("Score: " + man.getScore + ", Best: " + man.getBestScore)
-			System.out.println(man.stringifyTiles)
-			val cmds = Direction.values.filter([man.canMove(it)]).map[it.toString.toLowerCase]
-			System.out.println("Please enter a command [" + (cmds + #["restart"]).join(", ") + "]:")
-			System.out.print("> ")
+			if (aimode) {
+				System.out.println(man.getScore + " " + man.getBestScore)
+				System.out.println(man.stringifyTiles)
+			} else {
+				System.out.println("Score: " + man.getScore + ", Best: " + man.getBestScore)
+				System.out.println(man.stringifyTiles)
+				val cmds = Direction.values.filter([man.canMove(it)]).map[it.toString.toLowerCase]
+				System.out.println("Please enter a command [" + (cmds + #["restart"]).join(", ") + "]:")
+				System.out.print("> ")
+			}
 			val line = reader.readLine
 			if (line == null) {
 				return
