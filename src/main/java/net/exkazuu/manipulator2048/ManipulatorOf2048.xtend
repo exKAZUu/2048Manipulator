@@ -1,9 +1,10 @@
 package net.exkazuu.manipulator2048
 
-import com.google.common.collect.ImmutableList
-import java.io.BufferedReader
-import java.io.InputStreamReader
+import com.google.common.base.Preconditions
+import com.google.common.collect.ImmutableMap
 import java.util.List
+import java.util.Map
+import net.exkazuu.gameaiarena.api.Point2
 import org.openqa.selenium.By
 import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.WebDriver
@@ -20,7 +21,8 @@ class WebDriveQuitThread extends Thread {
 		try {
 			driver.quit
 		} catch (Exception e) {
-			System.err.println("Failed to quit the given driver.");
+			e.printStackTrace
+			System.err.println("Failed to quit the given driver.")
 		}
 	}
 }
@@ -29,11 +31,11 @@ class ManipulatorOf2048 {
 	val WebDriver driver
 	val JavascriptExecutor jsExecutor
 	var int waitTimeForUpdate
-	var lastTiles = #[#[0]]
+	var Map<Point2, Integer> lastTiles = emptyMap
 	var lastMovedCount = -1
 
 	new() {
-		this(new FirefoxDriver());
+		this(new FirefoxDriver())
 	}
 
 	new(WebDriver driver) {
@@ -68,25 +70,26 @@ class ManipulatorOf2048 {
 		lastTiles.stringifyTileLines
 	}
 
-	def stringifyTiles(List<List<Integer>> tiles) {
+	def stringifyTiles(Map<Point2, Integer> tiles) {
 		tiles.stringifyTileLines.join(System.lineSeparator)
 	}
 
-	def stringifyTileLines(List<List<Integer>> tiles) {
-		tiles.map[it.join(' ')]
+	def stringifyTileLines(Map<Point2, Integer> tiles) {
+		val range = (0 .. 3)
+		range.map[y|range.map[x|tiles.get(new Point2(x, y))].join(' ')]
 	}
 
 	def getScore() {
-		val es = driver.findElements(By.className("score-container"))
-		if (es != null) {
-			parseIntIgnoringPlus(es.head.text)
+		val score = jsExecutor.executeScript("return game.score;") as Long
+		if (score != null) {
+			score.intValue
 		}
 	}
 
 	def getBestScore() {
-		val es = driver.findElements(By.className("best-container"))
-		if (es != null) {
-			parseIntIgnoringPlus(es.head.text)
+		val bestScore = jsExecutor.executeScript("return game.scoreManager.storage.bestScore;") as String
+		if (bestScore != null) {
+			Integer.parseInt(bestScore.trim)
 		}
 	}
 
@@ -100,90 +103,40 @@ class ManipulatorOf2048 {
 	}
 
 	def move(Direction direction) {
+		Preconditions.checkNotNull(direction)
+
 		if (!canMove(direction)) {
-			return
+			return false
 		}
 		val index = Direction.values.indexOf(direction)
-		if (index >= 0) {
-			jsExecutor.executeScript("game.move(" + index + ");")
-		}
+		jsExecutor.executeScript("game.move(" + index + ");")
 		updateTiles()
+		true
 	}
 
 	def canMove(Direction direction) {
-		val range = (0 .. 3)
-		range.exists [ y |
-			range.exists [ x |
-				val pt = lastTiles.get(y).get(x)
-				if (pt == 0) {
-					return false;
-				}
-				val nx = x + direction.dx
-				val ny = y + direction.dy
-				if (!range.contains(nx) || !range.contains(ny)) {
-					return false;
-				}
-				val nt = lastTiles.get(ny).get(nx)
-				if (nt == 0 || nt == pt) {
-					return true
-				}
-				return false
-			]
-		]
-	}
+		Preconditions.checkNotNull(direction)
 
-	private static def parseIntIgnoringPlus(String text) {
-		val index = text.indexOf('+')
-		val textWithoutPlus = if(index >= 0) text.substring(0, index) else text
-		Integer.parseInt(textWithoutPlus.trim)
+		Point2.getPoints(4, 4).exists [ p |
+			val oldTile = lastTiles.get(p)
+			if (oldTile == 0) {
+				return false
+			}
+			val newX = p.x + direction.dx
+			val newY = p.y + direction.dy
+			val newTile = lastTiles.get(new Point2(newX, newY))
+			newTile != null && (newTile == 0 || newTile == oldTile)
+		]
 	}
 
 	private def updateTiles() {
 		val tiles = jsExecutor.executeScript(
 			"return game.grid.cells.map(function(array) { return array.map(function(t) { if (t) return t.value; else return null; } ); });") as List<List<Long>>
-		lastTiles = ImmutableList.copyOf(
-			(0 .. 3).map [ y |
-				ImmutableList.copyOf(
-					tiles.map [
-						val tile = it.get(y)
-						if(tile != null) tile.intValue else 0
-					]
-				)
+		lastTiles = ImmutableMap.copyOf(
+			Point2.getPoints(4, 4).toInvertedMap [
+				val tile = tiles.get(it.x).get(it.y)
+				if (tile != null) tile.intValue else 0
 			])
 		lastMovedCount = lastMovedCount + 1
-	}
-
-	static def main(String[] args) {
-		val aimode = args.exists[it.trim == "-ai"]
-		val man = new ManipulatorOf2048()
-		val reader = new BufferedReader(new InputStreamReader(System.in))
-		while (!man.isGameOver) {
-			if (aimode) {
-				System.out.println(man.getScore + " " + man.getBestScore)
-				System.out.println(man.stringifyTiles)
-			} else {
-				System.out.println("Score: " + man.getScore + ", Best: " + man.getBestScore)
-				System.out.println(man.stringifyTiles)
-				val cmds = Direction.values.filter([man.canMove(it)]).map[it.toString.toLowerCase]
-				System.out.println("Please enter a command [" + (cmds + #["restart"]).join(", ") + "]:")
-				System.out.print("> ")
-			}
-			val line = reader.readLine
-			if (line == null) {
-				return
-			}
-			val command = line.trim.toUpperCase
-			if (command == "RESTART") {
-				man.restart()
-			} else {
-				try {
-					val direction = Direction.valueOf(command)
-					man.move(direction)
-				} catch (IllegalArgumentException e) {
-					System.err.println("Unknown command: " + command)
-				}
-			}
-		}
-		System.out.println("Game Over!")
 	}
 }
