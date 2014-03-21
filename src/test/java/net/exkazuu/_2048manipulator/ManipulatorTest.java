@@ -1,7 +1,8 @@
 package net.exkazuu._2048manipulator;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
@@ -25,11 +26,9 @@ public class ManipulatorTest {
     assertThat(zero, is(14));
     assertThat(two, is(2));
 
-    boolean changed = false;
     for (Direction direction : Direction.values()) {
-      changed |= man.move(direction);
+      man.move(direction);
     }
-    assertThat(changed, is(true));
 
     while (!man.isGameOver()) {
       for (Direction direction : Direction.values()) {
@@ -38,7 +37,7 @@ public class ManipulatorTest {
     }
     int score = man.getScore();
     assertThat(score, is(not(0)));
-
+    
     for (Direction direction : Direction.values()) {
       man.move(direction);
     }
