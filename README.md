@@ -18,5 +18,14 @@ System.out.println("Score: " + score);
 System.out.println("board");
 ```
 
+## C++
+TBD
+
+## Ruby
+TBD
+
+## Python
+TBD
+
 # How to compile
 1. ```mvn package```
