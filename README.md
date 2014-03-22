@@ -4,6 +4,9 @@
 # What Is This
 - 2048Manipulator is a Xtend (Java) program that manipulates the 2048 game (http://gabrielecirulli.github.io/2048/).
 - 2048Manipulator provides both a Java class that your Java program can use and a standalone program that any program can use via Standard I/O.
+- Sample scripts for manipulating 2048 using 2048Manipulator written in **Java**, **C++**, **Ruby** and **Python**.
+
+![Screeshot of 2048Manipulator with Ruby script](screenshot.png "Screeshot of 2048Manipulator with Ruby script")
 
 # How to Use
 ## Java
@@ -30,6 +33,9 @@ Run the following command: ```java -jar 2048Manipulator.jar -a "ruby main.rb"```
 ## Python
 Please see [main.py](sample/main.py).
 Run the following command: ```java -jar 2048Manipulator.jar -a "python main.py"```.
+
+## Help
+Run the following command: ```java -jar 2048Manipulator.jar -h```.
 
 # How to compile
 1. ```mvn package```
