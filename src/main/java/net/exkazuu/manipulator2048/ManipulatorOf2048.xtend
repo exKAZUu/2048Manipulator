@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableMap
 import java.util.List
 import java.util.Map
 import net.exkazuu.gameaiarena.api.Point2
-import org.openqa.selenium.By
 import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.firefox.FirefoxDriver
@@ -97,7 +96,7 @@ class ManipulatorOf2048 {
 	}
 
 	def isGameOver() {
-		!driver.findElements(By.className("game-over")).empty
+		jsExecutor.executeScript("return game.over;") as Boolean
 	}
 
 	def move(Direction direction) {
@@ -127,13 +126,17 @@ class ManipulatorOf2048 {
 		]
 	}
 
+	def quit() {
+		driver.quit()
+	}
+
 	private def updateTiles() {
 		val tiles = jsExecutor.executeScript(
 			"return game.grid.cells.map(function(array) { return array.map(function(t) { if (t) return t.value; else return null; } ); });") as List<List<Long>>
 		lastTiles = ImmutableMap.copyOf(
 			Point2.getPoints(4, 4).toInvertedMap [
 				val tile = tiles.get(it.x).get(it.y)
-				if (tile != null) tile.intValue else 0
+				if(tile != null) tile.intValue else 0
 			])
 		lastMovedCount = lastMovedCount + 1
 	}

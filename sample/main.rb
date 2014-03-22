@@ -2,12 +2,14 @@ rand = Random.new
 cmds = ['up', 'right', 'down', 'left']
 
 loop do
-  finished = STDIN.gets.to_i
+  continued = STDIN.gets.to_i
   scores = STDIN.gets.split(' ').map { |w| w.to_i }
   tiles = (1 .. 4).map { |y| STDIN.gets.split(' ').map { |w| w.to_i } }
-  if finished == 0
+  if continued == 0
+    STDOUT.puts("exit")
+    STDOUT.flush()
     break
   end
-  STDOUT.puts(cmds[rand.max(4)])
+  STDOUT.puts(cmds[rand.rand(4)])
   STDOUT.flush()
 end

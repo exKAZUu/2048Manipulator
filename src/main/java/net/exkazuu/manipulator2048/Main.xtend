@@ -6,15 +6,15 @@ import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
 import org.apache.commons.cli.BasicParser
 import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.HelpFormatter
-import org.apache.commons.cli.OptionBuilder
 import org.apache.commons.cli.Options
 import org.apache.commons.cli.ParseException
 
 class Main {
 	static val WORK_DIR = "w"
 	static val AI_PROGRAM = "a"
-	static val HELP = "h"
 	static val SIMPLE = "s"
+	static val LOG = "l"
+	static val HELP = "h"
 
 	static def printHelp(Options options) {
 		val help = new HelpFormatter()
@@ -22,16 +22,10 @@ class Main {
 	}
 
 	static def buildOptions() {
-		OptionBuilder.hasArgs()
-		OptionBuilder.withDescription("Set working directory for an external program.")
-		val workDirOption = OptionBuilder.create(WORK_DIR)
-
-		OptionBuilder.hasArgs()
-		OptionBuilder.withDescription("Set an external AI program.")
-		val aiProgramOption = OptionBuilder.create(AI_PROGRAM)
-
-		return new Options().addOption(HELP, false, "Print this help.").addOption(SIMPLE, false,
-			"Enable simple output mode.").addOption(aiProgramOption).addOption(workDirOption)
+		return new Options().addOption(WORK_DIR, true, "Set working directory for an external program.").
+			addOption(AI_PROGRAM, true, "Set a path of an external AI program.").addOption(HELP, false,
+				"Print this help.").addOption(SIMPLE, false, "Enable simple output mode.").addOption(LOG, false,
+				"Enable logging mode.")
 	}
 
 	static def main(String[] args) {
@@ -63,6 +57,10 @@ class Main {
 			val program = new ExternalComputerPlayer(aiPath.split(' '), workDir)
 			writeLine = [program.writeLine(it)]
 			readLine = [|program.readLine]
+			if (cl.hasOption(LOG)) {
+				program.addOuputLogStream(System.out)
+				program.addErrorLogStream(System.err)
+			}
 		}
 		while (!man.isGameOver) {
 			if (simpleMode) {
@@ -100,5 +98,10 @@ class Main {
 			writeLine.apply("Score: " + man.getScore + ", Best: " + man.getBestScore)
 		}
 		writeLine.apply(man.stringifyTiles)
+		if (!simpleMode) {
+			writeLine.apply("Please enter any key.")
+		}
+		readLine.apply()
+		man.quit()
 	}
 }
