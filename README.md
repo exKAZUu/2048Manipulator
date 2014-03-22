@@ -3,7 +3,7 @@
 
 # What Is This
 - 2048Manipulator is a Xtend (Java) program that manipulates the 2048 game (http://gabrielecirulli.github.io/2048/).
-- 2048Manipulator provides both a class that your Java program can use and a main method that any program can use via Standard I/O.
+- 2048Manipulator provides both a Java class that your Java program can use and a standalone program that any program can use via Standard I/O.
 
 # How to Use
 ## Java
@@ -15,17 +15,21 @@ man.move(Direction.UP);
 int score = man.getScore();
 String board = man.stringifyTiles();
 System.out.println("Score: " + score);
-System.out.println("board");
+System.out.println(board);
+man.quit();
 ```
 
 ## C++
-TBD
+Please see [main.cpp](sample/main.cpp).
+Run the following command: ```java -jar 2048Manipulator.jar -a "a.out"```.
 
 ## Ruby
-TBD
+Please see [main.rb](sample/main.rb).
+Run the following command: ```java -jar 2048Manipulator.jar -a "ruby main.rb"```.
 
 ## Python
-TBD
+Please see [main.py](sample/main.py).
+Run the following command: ```java -jar 2048Manipulator.jar -a "python main.py"```.
 
 # How to compile
 1. ```mvn package```
