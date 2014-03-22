@@ -154,7 +154,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>net.javachallenge.Main</mainClass>
+              <mainClass>net.exkazuu.manipulator2048.Main</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -192,6 +192,12 @@
           <filesets>
             <fileset>
               <directory>xtend-gen</directory>
+              <includes>
+                <include>**</include>
+              </includes>
+            </fileset>
+            <fileset>
+              <directory>generated-sources</directory>
               <includes>
                 <include>**</include>
               </includes>

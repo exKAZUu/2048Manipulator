@@ -12,3 +12,4 @@ target/
 
 # Xtend
 xtend-gen/
+generated-sources/
