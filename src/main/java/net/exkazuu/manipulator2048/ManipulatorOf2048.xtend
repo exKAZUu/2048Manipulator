@@ -21,8 +21,6 @@ class WebDriveQuitThread extends Thread {
 		try {
 			driver.quit
 		} catch (Exception e) {
-			e.printStackTrace
-			System.err.println("Failed to quit the given driver.")
 		}
 	}
 }
