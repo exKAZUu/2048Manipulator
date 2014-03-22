@@ -6,7 +6,7 @@ loop do
   scores = STDIN.gets.split(' ').map { |w| w.to_i }
   tiles = (1 .. 4).map { |y| STDIN.gets.split(' ').map { |w| w.to_i } }
   if continued == 0
-    STDOUT.puts("exit")
+    STDOUT.puts('exit')
     STDOUT.flush()
     break
   end
