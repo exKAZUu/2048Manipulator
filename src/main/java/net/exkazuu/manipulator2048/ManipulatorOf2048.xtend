@@ -91,7 +91,7 @@ class ManipulatorOf2048 {
 	}
 
 	def restart() {
-		jsExecutor.executeScript("game = new GameManager(4, KeyboardInputManager, HTMLActuator, LocalScoreManager);")
+		jsExecutor.executeScript("game = new GameManager(4, KeyboardInputManager, HTMLActuator, LocalStorageManager);")
 		updateTiles()
 	}
 
