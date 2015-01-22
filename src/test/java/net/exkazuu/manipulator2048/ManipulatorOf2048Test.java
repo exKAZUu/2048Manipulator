@@ -1,35 +1,29 @@
-package net.exkazuu._2048manipulator;
+package net.exkazuu.manipulator2048;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
-import java.util.List;
-
 import org.junit.Test;
 
-public class ManipulatorTest {
+public class ManipulatorOf2048Test {
   @Test
   public void test() {
-    Manipulator man = new Manipulator();
+    ManipulatorOf2048 man = new ManipulatorOf2048();
     assertThat(man.getScore(), is(0));
 
     int zero = 0, two = 0;
-    for (List<Integer> tiles : man.getTiles()) {
-      for (int tile : tiles) {
-        if (tile == 0)
-          zero++;
-        else if (tile == 2)
-          two++;
-      }
+    for (Integer tile : man.getTiles().values()) {
+      if (tile == 0)
+        zero++;
+      else if (tile == 2)
+        two++;
     }
     assertThat(zero, is(14));
     assertThat(two, is(2));
 
-    boolean changed = false;
     for (Direction direction : Direction.values()) {
-      changed |= man.move(direction);
+      man.move(direction);
     }
-    assertThat(changed, is(true));
 
     while (!man.isGameOver()) {
       for (Direction direction : Direction.values()) {
